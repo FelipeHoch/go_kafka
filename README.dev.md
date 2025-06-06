@@ -12,6 +12,7 @@ git clone git@github.com:FelipeHoch/go_kafka.git
 cd go_kafka
 
 docker compose up 
+
 ```
 
 Os serviços necessários para o funcionamento do microserviço serão iniciados. O Kafka possuirá um delay de 10 segundos para que o Zookeeper possa ser iniciado.
@@ -19,6 +20,15 @@ Os serviços necessários para o funcionamento do microserviço serão iniciados
 ## Como testar
 
 Para testar o microserviço, você pode acessar a URL `http://localhost:7777` que dará acesso ao Kafka UI, lá você poderá produzir mensagens nos tópicos.
+
+Para testar a ordem, você pode produzir uma mensagem com o seguinte payload:
+
+```json
+{
+    "ordemDeVenda": "1234567890",
+    "etapaAtual": "FATURADA"
+}
+```
 
 ## Disclaimer
 
