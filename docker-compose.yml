@@ -17,7 +17,7 @@ services:
       ZOOKEEPER_SASL_ENABLED: false
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,SASL_PLAINTEXT://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,SASL_PLAINTEXT://kafka:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT
       KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: SCRAM-SHA-256
@@ -31,3 +31,28 @@ services:
       - ./kafka_server_jaas.conf:/tmp/kafka_server_jaas.conf
       - ./init-kafka.sh:/init-kafka.sh
     entrypoint: ["/bin/bash", "/init-kafka.sh"]
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "7777:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9093
+      - KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL=SASL_PLAINTEXT
+      - KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM=SCRAM-SHA-256
+      - KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG=org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka" password="kafka-secret";
+    depends_on:
+      - kafka
+
+  go-kafka-consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env      
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    networks:
+      - default
