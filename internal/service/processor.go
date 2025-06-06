@@ -59,7 +59,7 @@ func (s *OrderService) ProcessMessage(message *kafka.Message) error {
 		return errors.New(fmt.Sprintf("error sending request after multiple attempts - order %s", order.ID))
 	}
 
-	log.Printf("Order %s processed:", order.ID)
+	log.Printf("Order %s processed", order.ID)
 
 	return nil
 }
