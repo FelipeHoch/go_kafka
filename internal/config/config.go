@@ -23,6 +23,7 @@ func NewConfig() *Config {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./")
+	viper.AddConfigPath("/app")
 	
 	viper.AutomaticEnv()
 	

@@ -11,10 +11,10 @@ import (
 func main() {
 	cfg := config.NewConfig()
 
-	kafkaConsumer, err := consumer.NewKafkaConsumer(
+	kafkaConsumer, err := consumer.NewKafkaService(
 		cfg.KafkaBootstrapServers, 
-		cfg.KafkaGroupID, 
-		cfg.KafkaTopic, 
+		cfg.KafkaGroupID,  
+		cfg.KafkaTopicDLQ,
 		cfg.KafkaUsername, 
 		cfg.KafkaPassword, 
 		cfg.KafkaSecurityProtocol, 
