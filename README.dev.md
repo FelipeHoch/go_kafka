@@ -7,7 +7,7 @@ Este é um microserviço que atua como consumidor de mensagens do Kafka, process
 Para executar o microserviço, apenas rode os seguintes comandos (Analise o .env, caso deseje utilizar o target service):
 
 ```bash
-git clone https://github.com/felipehoch/go_kafka.git
+git clone git@github.com:FelipeHoch/go_kafka.git
 
 cd go_kafka
 
