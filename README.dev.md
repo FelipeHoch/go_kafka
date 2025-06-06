@@ -23,3 +23,5 @@ Para testar o microserviço, você pode acessar a URL `http://localhost:7777` qu
 ## Disclaimer
 
 Implementei um tracing de forma simples apenas com UUIDs, dado o escopo do teste, contudo em um ambiente real, deveria ser utilizado um tracing mais robusto, como o [OpenTelemetry](https://opentelemetry.io/).
+
+Para validar a ordem, tomei a liberdade de validar o status da ordem, caso o status seja diferente de `FATURADA`, a mesma será movida para o tópico de DLQ.
