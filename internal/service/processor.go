@@ -35,7 +35,7 @@ func (s *OrderService) ProcessMessage(message *kafka.Message) error {
 		return errors.New(fmt.Sprintf("error unmarshalling message - event %s", message.Value))
 	}
 
-	if !order.IsAnValidOrder() {		
+	if !order.IsValid() {		
 		return errors.New(fmt.Sprintf("invalid order - event %s", message.Value))
 	}
 

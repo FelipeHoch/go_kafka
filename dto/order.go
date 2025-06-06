@@ -7,6 +7,6 @@ type Order struct {
 	Status string `json:"etapaAtual"`
 }
 
-func (o *Order) IsAnValidOrder() bool {
+func (o *Order) IsValid() bool {
 	return o.ID != "" && o.Status != "" && strings.ToUpper(o.Status) == "FATURADO"
 }
