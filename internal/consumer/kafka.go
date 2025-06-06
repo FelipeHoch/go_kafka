@@ -60,7 +60,7 @@ func NewKafkaService(
 	return kc, nil
 }
 
-func (c *KafkaService) Consume(topic string, callback func(message *kafka.Message) error) error {
+func (c *KafkaService) Consume(topic string, callback func(message *kafka.Message) (string, error)) error {
 	c.topic = topic
 
 	if err := c.ensureTopicExists(topic); err != nil {
@@ -112,12 +112,12 @@ func (c *KafkaService) Consume(topic string, callback func(message *kafka.Messag
 			continue
 		}
 
-		processingErr := callback(msg)
+		traceID, processingErr := callback(msg)
 
 		if processingErr != nil {
 			log.Printf("Error processing: %v", processingErr)
 
-			if dlqErr := c.PublishToDLQ(msg, processingErr); dlqErr != nil {
+			if dlqErr := c.PublishToDLQ(msg, traceID, processingErr); dlqErr != nil {
 				log.Printf("Error publishing to DLQ: %v", dlqErr)
 			} else {
 				log.Printf("Published to DLQ")
@@ -132,7 +132,7 @@ func (c *KafkaService) Consume(topic string, callback func(message *kafka.Messag
 	}
 }
 
-func (c *KafkaService) PublishToDLQ(message *kafka.Message, err error) error {
+func (c *KafkaService) PublishToDLQ(message *kafka.Message, traceID string, err error) error {
 	headers := make([]kafka.Header, 0)
 
 	headers = append(headers, kafka.Header{
@@ -148,6 +148,11 @@ func (c *KafkaService) PublishToDLQ(message *kafka.Message, err error) error {
 	headers = append(headers, kafka.Header{
 		Key:   "failed-at",
 		Value: []byte(time.Now().Format(time.RFC3339)),
+	})
+
+	headers = append(headers, kafka.Header{
+		Key:   "trace-id",
+		Value: []byte(traceID),
 	})
 
 	newMessage := &kafka.Message{
