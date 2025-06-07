@@ -112,6 +112,8 @@ func (c *KafkaService) Consume(topic string, callback func(message *kafka.Messag
 			continue
 		}
 
+		log.Printf("Message received: %v", string(msg.Value))
+
 		traceID, processingErr := callback(msg)
 
 		if processingErr != nil {
@@ -288,10 +290,6 @@ func (c *KafkaService) ensureTopicExists(topic string) error {
 	}
 
 	log.Printf("Ensuring topic exists: %s", topic)
-
-	if len(metadata.Topics) == 0 {
-		return errors.New("no topics available")
-	}
 
 	for _, topicMetadata := range metadata.Topics {
 		if topicMetadata.Topic == topic {

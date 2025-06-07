@@ -24,9 +24,9 @@ func NewConfig() *Config {
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./")
 	viper.AddConfigPath("/app")
-	
+
 	viper.AutomaticEnv()
-	
+
 	viper.SetDefault("KAFKA_BOOTSTRAP_SERVERS", []string{"localhost:9092"})
 	viper.SetDefault("KAFKA_SASL_MECHANISM", "PLAIN")
 	viper.SetDefault("KAFKA_SECURITY_PROTOCOL", "SASL_PLAINTEXT")
@@ -35,19 +35,17 @@ func NewConfig() *Config {
 	viper.SetDefault("TARGET_SERVICE_URL", "http://localhost:8080/api/v1")
 	viper.SetDefault("KAFKA_TOPIC_DLQ", "seu-topico-dlq")
 	viper.SetDefault("KAFKA_USERNAME", "exemplo")
-	viper.SetDefault("KAFKA_PASSWORD", "exemplo")	
-	
-	if err := viper.ReadInConfig(); err != nil {
-		log.Printf("Error reading configuration file: %v", err)
+	viper.SetDefault("KAFKA_PASSWORD", "exemplo")
 
-		log.Println("Using environment variables or default values")
+	if err := viper.ReadInConfig(); err != nil {
+		log.Println("Using environment variables")
 	}
-	
+
 	var config Config
-	
+
 	if err := viper.Unmarshal(&config); err != nil {
 		log.Fatalf("Error unmarshalling configurations: %v", err)
 	}
-	
+
 	return &config
 }
