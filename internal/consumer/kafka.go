@@ -120,16 +120,16 @@ func (c *KafkaService) Consume(topic string, callback func(message *kafka.Messag
 			log.Printf("Error processing: %v", processingErr)
 
 			if dlqErr := c.PublishToDLQ(msg, traceID, processingErr); dlqErr != nil {
-				log.Printf("Error publishing to DLQ: %v", dlqErr)
+				log.Printf("Error publishing to DLQ: %v, traceID: %v", dlqErr, traceID)
 			} else {
-				log.Printf("Published to DLQ")
+				log.Printf("Published to DLQ - traceID: %v", traceID)
 			}
 		} else {
-			log.Printf("Message processed successfully")
+			log.Printf("Message processed successfully - traceID: %v", traceID)
 		}
 
 		if _, commitErr := c.consumer.CommitMessage(msg); commitErr != nil {
-			log.Printf("Error committing message: %v", commitErr)
+			log.Printf("Error committing message: %v, traceID: %v", commitErr, traceID)
 		}
 	}
 }
