@@ -15,7 +15,7 @@ docker compose up
 
 ```
 
-Os serviços necessários para o funcionamento do microserviço serão iniciados. O Kafka possuirá um delay de 10 segundos para que o Zookeeper possa ser iniciado.
+Os serviços necessários para o funcionamento do microserviço serão iniciados.
 
 ## Como testar
 
